@@ -1,52 +1,55 @@
-# ntv.py
 import requests
 
-# NTV'nin base URL'si
+# Base URLs for NTV and STAR
 ntv_base_url = "https://mn-nl.mncdn.com/dogusdyg_ntv/"
-
-# Başlangıç URL'si
+star_base_url = "https://mn-nl.mncdn.com/dogusdyg_star/"
 initial_url = "https://dygvideo.dygdigital.com/live/hls/kralpop?m3u8"
 
-# M3U8 dosyasını almak ve düzenlemek için kullanılan fonksiyon
 def fetch_and_save_m3u8(base_url, modified_url, output_file):
     try:
-        # URL'den içerik al
+        # Fetch the content from the modified URL
         content_response = requests.get(modified_url)
         content_response.raise_for_status()
         content = content_response.text
 
-        # İçeriği satırlara ayır ve her bir satırı işle
+        # Process and save the content
         lines = content.split("\n")
         modified_content = ""
 
         for line in lines:
             if line.startswith("live_"):
-                # URL'yi tam olarak oluştur
+                # Add base URL to live stream lines
                 full_url = base_url + line
                 modified_content += full_url + "\n"
             else:
                 modified_content += line + "\n"
         
-        # Dosyaya kaydet
+        # Save the modified content to the specified output file
         with open(output_file, "w") as f:
             f.write(modified_content)
-        print(f"Saved to {output_file}")
+        print(f"Content saved to {output_file}")
 
     except requests.RequestException as e:
-        print(f"Error fetching {output_file}: {e}")
+        print(f"An error occurred while fetching {output_file}: {e}")
 
 try:
-    # Başlangıç URL'sini al
+    # Fetch the initial URL for NTV
     response = requests.get(initial_url)
     response.raise_for_status()
 
-    # Final URL'yi al
+    # Get the final URL returned by the request
     final_url = response.url
-    # NTV için URL'yi düzenle
-    ntv_modified_url = final_url.replace("dogusdyg_kralpoptv/dogusdyg_kralpoptv.smil/playlist", "dogusdyg_ntv/live")
 
-    # M3U8 dosyasını al ve kaydet
+    # Modify the URL to point to NTV variant
+    ntv_modified_url = final_url.replace("dogusdyg_kralpoptv/dogusdyg_kralpoptv.smil/playlist", "dogusdyg_ntv/live")
+    # Modify the URL to point to STAR variant
+    star_modified_url = final_url.replace("dogusdyg_kralpoptv/dogusdyg_kralpoptv.smil/playlist", "dogusdyg_star/live")
+
+    # Fetch and save NTV m3u8 file
     fetch_and_save_m3u8(ntv_base_url, ntv_modified_url, "ressources/tur/ntv.m3u8")
 
+    # Fetch and save STAR m3u8 file
+    fetch_and_save_m3u8(star_base_url, star_modified_url, "ressources/tur/star.m3u8")
+
 except requests.RequestException as e:
-    print(f"Initial URL error: {e}")
+    print(f"An error occurred while fetching the initial URL: {e}")
