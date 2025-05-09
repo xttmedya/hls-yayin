@@ -10,11 +10,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repo
+        uses: actions/checkout@v3
 
-      - name: config
+      - name: Configure Git
         run: |
-          git config --global user.email "<>"
+          git config --global user.email "ntvtr@bot.com"
           git config --global user.name "ntvtr bot"
 
       - name: Set up Python
@@ -25,21 +26,16 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          python3 -m pip install requests
+          pip install requests
 
-      - name: Execute Python script
+      - name: Run Python script
         run: python3 ressources/tur/ntv.py
 
-      - name: Git add
-        run: |
-          git add -A
-          ls -la 
-
-      - name: Commit and Push with Token
+      - name: Commit and Push changes
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
+          git add ressources/tur/*.m3u8
+          git commit -m "ntvtr updated" || echo "No changes to commit"
           git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}
-          git pull origin main
-          git commit -m "ntvtr updated" || echo "nothing to commit"
           git push origin main
