@@ -25,20 +25,21 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          
-      - name: Install requests module
-        run: python3 -m pip install requests
+          python3 -m pip install requests
 
       - name: Execute Python script
         run: python3 ressources/tur/ntv.py
 
-      - name: git add
+      - name: Git add
         run: |
           git add -A
           ls -la 
-          
-      - name: commit & push
+
+      - name: Commit and Push with Token
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
+          git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}
           git pull origin main
-          git commit -m "ntvtr updated"
+          git commit -m "ntvtr updated" || echo "nothing to commit"
           git push origin main
