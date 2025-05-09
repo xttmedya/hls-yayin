@@ -28,7 +28,7 @@ jobs:
           python3 -m pip install requests
 
       - name: Execute Python script
-        run: python3 ntv.py
+        run: python3 ressources/tur/ntv.py
 
       - name: git add
         run: |
