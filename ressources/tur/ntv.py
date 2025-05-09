@@ -46,10 +46,10 @@ try:
     star_modified_url = final_url.replace("dogusdyg_kralpoptv/dogusdyg_kralpoptv.smil/playlist", "dogusdyg_star/live")
 
     # Fetch and save NTV m3u8 file
-    fetch_and_save_m3u8(ntv_base_url, ntv_modified_url, "ntv.m3u8")
+    fetch_and_save_m3u8(ntv_base_url, ntv_modified_url, "ressources/tur/ntv.m3u8")
 
     # Fetch and save STAR m3u8 file
-    fetch_and_save_m3u8(star_base_url, star_modified_url, "star.m3u8")
+    fetch_and_save_m3u8(star_base_url, star_modified_url, "ressources/tur/star.m3u8")
 
 except requests.RequestException as e:
     print(f"An error occurred while fetching the initial URL: {e}")
