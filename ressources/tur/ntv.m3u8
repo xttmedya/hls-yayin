@@ -1,9 +1,8 @@
 #EXTM3U
 #EXT-X-VERSION:3
-#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=3000000,RESOLUTION=1920x1080
-https://mn-nl.mncdn.com/dogusdyg_ntv/live_1080p3000000kbps/index.m3u8?st=SXD2FvZVoI3NBoqtEBtjcw&e=1746909050
 #EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=1500000,RESOLUTION=1280x720
-https://mn-nl.mncdn.com/dogusdyg_ntv/live_720p1500000kbps/index.m3u8?st=SXD2FvZVoI3NBoqtEBtjcw&e=1746909050
+https://trkvz.daioncdn.net/minikago/minikago_720p.m3u8?e=1746870369&st=vlnzBhmlzIEpWKit64vfPw&sid=7e7tayld1oo0&app=be451f3e-b8d8-4edd-8469-1030b5ad7fd3&ce=3
 #EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=900000,RESOLUTION=854x480
-https://mn-nl.mncdn.com/dogusdyg_ntv/live_480p90000kbps/index.m3u8?st=SXD2FvZVoI3NBoqtEBtjcw&e=1746909050
-
+https://trkvz.daioncdn.net/minikago/minikago_480p.m3u8?e=1746870369&st=vlnzBhmlzIEpWKit64vfPw&sid=7e7tayld1oo0&app=be451f3e-b8d8-4edd-8469-1030b5ad7fd3&ce=3
+#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=800000,RESOLUTION=640x360
+https://trkvz.daioncdn.net/minikago/minikago_360p.m3u8?e=1746870369&st=vlnzBhmlzIEpWKit64vfPw&sid=7e7tayld1oo0&app=be451f3e-b8d8-4edd-8469-1030b5ad7fd3&ce=3
