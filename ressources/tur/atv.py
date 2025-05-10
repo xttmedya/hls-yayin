@@ -1,7 +1,7 @@
 import streamlink
 import ast
 
-# Yayın adresi
+# Yayın adresi stream
 streams = streamlink.streams('https://www.atv.com.tr/canli-yayin')
 unique_urls = set()
 
