@@ -55,7 +55,7 @@ elif without_quality:
         output_lines.append(url)
 
 # Dosyaya yaz
-with open("atv.m3u8", "w", encoding="utf-8") as f:
+with open("ressources/tur/atv.m3u8", "w", encoding="utf-8") as f:
     f.write("\n".join(output_lines))
 
 print(".m3u8 dosyası oluşturuldu.")
