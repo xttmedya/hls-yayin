@@ -1,8 +1,0 @@
-#EXTM3U
-#EXT-X-VERSION:3
-#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=1500000,RESOLUTION=1280x720
-https://trkvz.daioncdn.net/minikago/minikago_720p.m3u8?e=1746870392&st=yUi3h6CjNTz8To3uwuw3yA&sid=7e7tc6f0wyvg&app=be451f3e-b8d8-4edd-8469-1030b5ad7fd3&ce=3
-#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=900000,RESOLUTION=854x480
-https://trkvz.daioncdn.net/minikago/minikago_480p.m3u8?e=1746870392&st=yUi3h6CjNTz8To3uwuw3yA&sid=7e7tc6f0wyvg&app=be451f3e-b8d8-4edd-8469-1030b5ad7fd3&ce=3
-#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=800000,RESOLUTION=640x360
-https://trkvz.daioncdn.net/minikago/minikago_360p.m3u8?e=1746870392&st=yUi3h6CjNTz8To3uwuw3yA&sid=7e7tc6f0wyvg&app=be451f3e-b8d8-4edd-8469-1030b5ad7fd3&ce=3
