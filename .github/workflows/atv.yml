@@ -2,7 +2,7 @@ name: atv
 
 on:
   schedule:
-    - cron: '8 */20 * * *'  # Her 20 saatte bir çalışır, dakikayı değiştirebilirsin
+    - cron: '20 */6 * * *'  # 6 saatte bir çalışır
   workflow_dispatch:
 
 jobs:
@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout repo
         uses: actions/checkout@v3
 
       - name: Configure Git
@@ -28,10 +28,15 @@ jobs:
           python -m pip install --upgrade pip
           pip install streamlink
 
-      - name: Run script
+      - name: Run Python script
         run: python3 ressources/tur/atv.py
 
-      - name: Commit and Push
+      - name: Check if file created
+        run: |
+          echo "Oluşturulan dosyalar:"
+          ls -la ressources/tur/
+
+      - name: Commit and Push changes
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
         run: |
