@@ -2,7 +2,9 @@ name: ntvtr
 
 on:
   schedule:
-    - cron: '16 */20 * * *'
+    - cron: '16 */20 * * *' # 20 saatte bir çalıştırmak için
+    # - cron: '16 */2 * * *' # 2 saatte bir çalıştırmak için
+    # - cron: '*/40 * * * *' # 40 dakikada bir çalıştırmak için yani 00:40, 01:20, 02:00 gibi
   workflow_dispatch:
 
 jobs:
