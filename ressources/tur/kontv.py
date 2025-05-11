@@ -48,7 +48,7 @@ except Exception as e:
 # Eğer m3u8 linki başarıyla bulunmuşsa dosyayı yaz
 if m3u8_link:
     try:
-        with open("kontv.m3u8", "w", encoding="utf-8") as f:
+        with open("ressources/tur/kontv.m3u8", "w", encoding="utf-8") as f:
             f.write("\n".join(output_lines))
         print("✅ M3U8 dosyası başarıyla kaydedildi.")
     except Exception as e:
