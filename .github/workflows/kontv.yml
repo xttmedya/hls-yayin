@@ -1,18 +1,16 @@
 name: kontv
 
 on:
-  # Belirli aralıklarla tetiklemek için schedule kullanıyoruz
   schedule:
-    - cron: '0 */2 * * *'  # Her 2 saatte bir çalışacak şekilde ayarlandı
-  # Manual tetikleme opsiyonu
+    - cron: '0 */2 * * *'
   workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # GitHub Actions ortamını belirleriz, burada Ubuntu kullanılıyor.
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout repo
         uses: actions/checkout@v3
 
       - name: Configure Git
@@ -20,24 +18,24 @@ jobs:
           git config --global user.email "kontv@bot.com"
           git config --global user.name "kontv bot"
 
-      - name: Set up Python
+      - name: Setup Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.x'  # Python sürümünü belirliyoruz (şu anda 3.x kullanılabilir).
+          python-version: '3.x'
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install requests beautifulsoup4  # Gerekli bağımlılıkları yükleriz.
+          pip install requests beautifulsoup4
 
-      - name: Run Python script to fetch M3U8 link
-        run: python ressources/tur/kontv.py  # Python scriptinizi çalıştırıyoruz
+      - name: Run kontv.py
+        run: python ressources/tur/kontv.py
 
-      - name: Commit and Push changes
+      - name: Commit and Push
         env:
-          GH_PAT: ${{ secrets.GH_PAT }}  # GitHub Personal Access Token (PAT) ile kimlik doğrulaması
+          GH_PAT: ${{ secrets.GH_PAT }}
         run: |
-          git add ressources/tur/kontv.m3u8  # Kaydedilen dosyayı git'e ekliyoruz
-          git commit -m "Updated kontv.m3u8 with new link" || echo "No changes to commit"
+          git add ressources/tur/kontv.m3u8
+          git commit -m "Update kontv.m3u8" || echo "No changes"
           git remote set-url origin https://x-access-token:${GH_PAT}@github.com/${{ github.repository }}
-          git push origin main  # Ana branşa push işlemi yapılır
+          git push origin main
