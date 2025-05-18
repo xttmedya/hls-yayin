@@ -18,21 +18,22 @@ def normalize(text):
 satirlar = [normalize(s) for s in film_liste.strip().splitlines() if s.strip()]
 film_index = [(satirlar[i], satirlar[i+1]) for i in range(0, len(satirlar), 2)]
 
-m3u8_path = os.path.join(os.path.dirname(__file__), "ressources/tur/yenilmezler.m3u8")
+m3u8_path = os.path.join(os.path.dirname(__file__), "yenilmezler.m3u8")
 
 def get_current_index():
     if not os.path.exists(m3u8_path):
-        return 0
+        return -1  # dosya yoksa -1 olarak başla
     with open(m3u8_path, "r", encoding="utf-8") as f:
         content = f.read()
     for i, (ad, link) in enumerate(film_index):
         if link in content:
             return i
-    return 0
+    return -1  # bulunamadıysa
 
 def get_next_index():
     current = get_current_index()
-    return (current + 1) % len(film_index)
+    # Eğer -1 ise yani dosya yok veya içinde geçerli link yok, 0 ile başla
+    return 0 if current == -1 else (current + 1) % len(film_index)
 
 def update_m3u8():
     idx = get_next_index()
@@ -44,3 +45,4 @@ def update_m3u8():
 
 if __name__ == "__main__":
     update_m3u8()
+
