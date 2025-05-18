@@ -2,7 +2,7 @@ name: Yenilmezler Playlist Güncelle
 
 on:
   schedule:
-    - cron: "*/30 * * * *"  # Her 20 dakikada bir
+    - cron: "*/40 * * * *"  # Her 20 dakikada bir
   workflow_dispatch:        # Manuel çalıştırma için
 
 jobs:
@@ -26,4 +26,4 @@ jobs:
           git config --global user.email "actions@github.com"
           git add ressources/tur/yenilmezler.m3u8
           git commit -m "🎬 Yenilmezler listesi güncellendi"
-          git push
+          git push 
