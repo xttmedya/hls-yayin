@@ -3,13 +3,13 @@ import re
 
 film_liste = r"""
 # Yenilmezler
-https://vidmody.com/vs/tt2207090
+https://p1.photostack.net/v/qahkin5uxpxz/master.m3u8
 # Yenilmezler 2 Ultron Çağı
 https://p1.photofunny.org/v/v2w7dxo0f12d/master.m3u8
 # Yenilmezler 3 Sonsuzluk Savaşı
 https://p1.photomag.biz/v/zm8megwu2bfj/master.m3u8
 # Yenilmezler 4 Son Oyun
-https://vidmody.com/vs/tt4154796
+https://p1.photofunny.org/v/b9x44wu7wau4/master.m3u8
 """
 
 def normalize(text):
