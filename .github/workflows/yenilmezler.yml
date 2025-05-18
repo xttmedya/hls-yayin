@@ -2,7 +2,35 @@ name: Yenilmezler Playlist Güncelle
 
 on:
   schedule:
-    - cron: "*/2 * * * *"  # Her 20 dakikada bir
+    - cron: "*/60 * * * *"  # Her 20 dakikada bir
+    
+    # Her 10 dakikada bir çalıştır
+    # - cron: "*/10 * * * *"  # ⏱️ 10 dakika
+
+    # Her 20 dakikada bir çalıştır
+    # - cron: "*/20 * * * *"  # ⏱️ 20 dakika
+
+    # Her 1 saat 30 dakikada bir çalıştır (her 90 dakikada bir)
+    # - cron: "*/90 * * * *"  # ⏱️ 1 saat 30 dakika
+
+    # Her 1 gün + 8 saat = 32 saatte bir çalıştır (1920 dakika)
+    # - cron: "0 */32 * * *"  # 📆 1 gün 8 saat (her 32 saatte bir)
+
+    # Her 1 gün + 5 saat + 40 dakika = 1740 dakika
+    # - cron: "*/1740 * * * *"  # ⏱️ 1 gün 5 saat 40 dakika (yaklaşık)
+
+    # Her 1 hafta + 1 gün = 8 günde bir
+    # - cron: "0 0 */8 * *"  # 📅 1 hafta 1 gün (her 8 günde bir)
+
+    # Her 1 hafta + 2 gün + 3 saat = 9 gün 3 saat (her 219 saat ≈ 13140 dakika)
+    # - cron: "0 */219 * * *"  # 📆 1 hafta 2 gün 3 saat (yaklaşık)
+
+    # Her 1 ay + 1 hafta = her ayın 1'i ve 8'i gibi
+    # - cron: "0 0 1,8 * *"  # 🗓️ 1 ay 1 hafta (ayın 1’i ve 8’i)
+
+    # Her 1 ay + 2 hafta + 3 gün ≈ ayın 1’i, 15’i ve 18’i gibi
+    # - cron: "0 0 1,15,18 * *"  # 📅 1 ay 2 hafta 3 gün
+
   workflow_dispatch:        # Manuel çalıştırma için
 
 jobs:
