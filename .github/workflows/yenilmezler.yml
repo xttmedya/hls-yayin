@@ -2,7 +2,7 @@ name: Yenilmezler Playlist Güncelle
 
 on:
   schedule:
-    - cron: "*/60 * * * *"  # Her 20 dakikada bir
+    - cron: "*/30 * * * *"  # Her 20 dakikada bir
   workflow_dispatch:        # Manuel çalıştırma için
 
 jobs:
