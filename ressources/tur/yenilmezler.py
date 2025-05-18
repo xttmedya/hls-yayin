@@ -3,13 +3,13 @@ import re
 
 film_liste = r"""
 # Yenilmezler
-https://vidmody.com/vs/tt2207090
+https://p1.photostack.net/v/qahkin5uxpxz/master.m3u8
 # Yenilmezler 2 Ultron Çağı
 https://p1.photofunny.org/v/v2w7dxo0f12d/master.m3u8
 # Yenilmezler 3 Sonsuzluk Savaşı
 https://p1.photomag.biz/v/zm8megwu2bfj/master.m3u8
 # Yenilmezler 4 Son Oyun
-https://vidmody.com/vs/tt4154796
+https://p1.photofunny.org/v/b9x44wu7wau4/master.m3u8
 """
 
 def normalize(text):
@@ -25,11 +25,13 @@ def get_current_index():
     if not os.path.exists(m3u8_path):
         return -1
     with open(m3u8_path, "r", encoding="utf-8") as f:
-        current_link = f.read().strip()
+        content = f.read().strip()
+    # Sadece linki alalım (ilk satır #EXTM3U olabilir)
+    current_link = content.splitlines()[-1] if content else ""
     for i, (_, link) in enumerate(film_index):
         if link == current_link:
             return i
-    return -1
+    return -1  # Link artık listede yok → liste değişmiş olabilir
 
 def get_next_index():
     current = get_current_index()
@@ -39,7 +41,6 @@ def update_m3u8():
     idx = get_next_index()
     ad, link = film_index[idx]
     with open(m3u8_path, "w", encoding="utf-8") as f:
-        # f.write(link + "\n")
         f.write("#EXTM3U\n" + link + "\n")
     print(f"🎬 Playlist güncellendi → {ad[2:]}")
 
