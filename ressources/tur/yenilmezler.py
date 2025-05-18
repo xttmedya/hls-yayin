@@ -39,7 +39,7 @@ def update_m3u8():
     idx = get_next_index()
     ad, link = film_index[idx]
     with open(m3u8_path, "w", encoding="utf-8") as f:
-        f.write(link + "\n")
+        f.write("#EXTM3U\n" + link + "\n")
     print(f"🎬 Playlist güncellendi → {ad[2:]}")
 
 if __name__ == "__main__":
