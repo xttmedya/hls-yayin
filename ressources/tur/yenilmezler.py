@@ -18,7 +18,7 @@ def normalize(text):
 satirlar = [normalize(s) for s in film_liste.strip().splitlines() if s.strip()]
 film_index = [(satirlar[i], satirlar[i+1]) for i in range(0, len(satirlar), 2)]
 
-m3u8_path = os.path.join(os.path.dirname(__file__), "yenilmezler.m3u8")
+m3u8_path = os.path.join(os.path.dirname(__file__), "ressources/tur/yenilmezler.m3u8")
 
 def get_current_index():
     if not os.path.exists(m3u8_path):
