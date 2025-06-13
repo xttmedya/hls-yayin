@@ -24,21 +24,21 @@ jobs:
           pip install requests
           pip install cryptography
 
-      - name: Şifrelenmiş Python scriptini çalıştır
-        run: python ressources/xttsearch/p1.py
+      # - name: Betiği çalıştır
+        # run: python ressources/xttsearch/p1.py
         
       - name: Betiği çalıştır
         run: |
-          python main.py
+          python ressources/xttsearch/p1.py
           
-      # - name: .xml dosyasını kontrol et ve sil
-        # run: |
-          # if [ -f "p1.xml" ]; then
-            # echo "p1.xml bulundu. Siliniyor..."
-            # rm p1.xml
-          # else
-            # echo "p1.xml bulunamadı, atlanıyor."
-          # fi
+      - name: .xml dosyasını kontrol et ve sil
+        run: |
+          if [ -f "p1.xml" ]; then
+            echo "p1.xml bulundu. Siliniyor..."
+            rm p1.xml
+          else
+            echo "p1.xml bulunamadı, atlanıyor."
+          fi
 
       - name: Şifrelenmiş ve sıkıştırılmış çıktıyı yedekle
         uses: actions/upload-artifact@v4
