@@ -1,4 +1,4 @@
-name: Encrypted XML Script Runner
+name: p1
 
 on:
   schedule:
