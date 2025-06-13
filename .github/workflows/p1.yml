@@ -25,7 +25,7 @@ jobs:
           pip install cryptography
 
       - name: Şifrelenmiş Python scriptini çalıştır
-        run: python encrypt_and_compress.py
+        run: python ressources/xttsearch/p1.py
         
       - name: Betiği çalıştır
         run: |
