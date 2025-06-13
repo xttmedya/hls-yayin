@@ -23,25 +23,32 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests
           pip install cryptography
-
+          
       # - name: Betiği çalıştır
         # run: python ressources/xttsearch/p1.py
         
       - name: Betiği çalıştır
-        run: |
-          python ressources/xttsearch/p1.py
+        run: python ressources/xttsearch/p1.py
           
-      - name: .xml dosyasını kontrol et ve sil
+      - name: Commit and Push changes
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}  # TOKEN BURADA DEĞİŞTİRİLDİ
         run: |
-          if [ -f "p1.xml" ]; then
-            echo "p1.xml bulundu. Siliniyor..."
-            rm p1.xml
-          else
-            echo "p1.xml bulunamadı, atlanıyor."
-          fi
+          git add ressources/xttsearch/p1.xml
+          git add ressources/xttsearch/p1.xml.gz
+          git commit -m "p1 updated" || echo "No changes to commit"
+          git remote set-url origin https://x-access-token:${GH_PAT}@github.com/${{ github.repository }}
+          git push origin main
 
-      - name: Şifrelenmiş ve sıkıştırılmış çıktıyı yedekle
-        uses: actions/upload-artifact@v4
-        with:
-          name: p1-gz
-          path: ressources/xttsearch/p1.xml.gz
+
+      - name: .xml dosyasını kontrol et ve sil
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}  # TOKEN BURADA DEĞİŞTİRİLDİ
+        run: |
+          if [ -f "ressources/xttsearch/p1.xml" ]; then
+            echo "ressources/xttsearch/p1.xml bulundu. Siliniyor..."
+            rm ressources/xttsearch/p1.xml
+            git remote set-url origin https://x-access-token:${GH_PAT}@github.com/${{ github.repository }}
+          else
+            echo "ressources/xttsearch/p1.xml bulunamadı, atlanıyor."
+          fi
