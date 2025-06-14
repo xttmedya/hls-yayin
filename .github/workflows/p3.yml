@@ -2,7 +2,7 @@ name: p3
 
 on:
   schedule:
-    - cron: "0 */12 * * *"  # Her 12 saatte bir çalışır
+    - cron: "0 */24 * * *"  # Her 12 saatte bir çalışır
   workflow_dispatch:         # Elle tetikleme desteği
 
 jobs:
