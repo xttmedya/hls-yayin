@@ -2,24 +2,36 @@
 import subprocess
 import time
 import requests
+import os
 
+# Remote playlist URL
 REMOTE_PLAYLIST = "http://5.175.206.47/renderplaylist/playlist.m3u"
+
+# Local playback / HLS ayarları
 OUTPUT_M3U8 = "/app/public/stream.m3u8"
 SEGMENT_PATTERN = "/app/public/stream_%03d.ts"
 
-last_index = -1
+# Oynatılan son film adı (başlangıçta yok)
+current_index = 0
 current_links = []
 
 def fetch_playlist():
+    """Uzak playlisti indirir ve linkleri döndürür."""
     try:
         resp = requests.get(REMOTE_PLAYLIST, timeout=10)
         resp.raise_for_status()
-        return [line.strip() for line in resp.text.splitlines() if line.strip() and not line.startswith("#")]
+        links = []
+        for line in resp.text.splitlines():
+            line = line.strip()
+            if line and not line.startswith("#"):
+                links.append(line)
+        return links
     except Exception as e:
         print(f"Playlist indirilemedi: {e}")
         return []
 
 def play_link(link):
+    """FFmpeg ile HLS stream oluşturur."""
     print(f"Oynatılıyor: {link}")
     cmd = [
         "ffmpeg",
@@ -36,7 +48,11 @@ def play_link(link):
     subprocess.run(cmd, check=True)
 
 def find_start_index(old_links, new_links, last_index):
-    if last_index >= len(old_links) or last_index == -1:
+    """
+    Önceki listede oynatılan filmi bul, yeni listede varsa onun indexinden devam et.
+    Yoksa baştan başlat.
+    """
+    if last_index >= len(old_links):
         return 0
     last_link = old_links[last_index]
     if last_link in new_links:
@@ -45,15 +61,25 @@ def find_start_index(old_links, new_links, last_index):
         return 0
 
 if __name__ == "__main__":
+    # Başlangıçta playlist al
+    current_links = fetch_playlist()
+    if not current_links:
+        print("Playlist boş!")
+        exit(1)
+
+    last_index = -1  # Henüz oynatılan yok
+
     while True:
-        current_links = fetch_playlist()
-        if not current_links:
-            print("Playlist boş! 10 saniye bekleniyor...")
-            time.sleep(10)
-            continue
+        # Playlisti güncelle
+        new_links = fetch_playlist()
+        if new_links:
+            # Son oynatılan filmi kontrol et, devam et
+            start_index = find_start_index(current_links, new_links, last_index)
+            current_links = new_links
+        else:
+            start_index = 0  # Hata durumunda baştan başla
 
-        start_index = find_start_index(current_links, current_links, last_index)
-
+        # Oynatmaya başla
         for idx in range(start_index, len(current_links)):
             link = current_links[idx]
             try:
@@ -63,4 +89,5 @@ if __name__ == "__main__":
                 time.sleep(1)
             last_index = idx
 
+        # Tüm liste bitti, tekrar başa dönmeden önce 5 sn bekle
         time.sleep(5)
