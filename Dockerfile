@@ -12,7 +12,6 @@ RUN apt update && apt install -y \
 WORKDIR /app
 
 COPY start.sh /app/start.sh
-COPY playlist.m3u /app/playlist.m3u
 COPY default.conf /etc/nginx/sites-enabled/default
 COPY play.py /app/play.py
 

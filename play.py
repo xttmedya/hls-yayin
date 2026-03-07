@@ -3,51 +3,39 @@ import subprocess
 import time
 import requests
 
-PLAYLIST_FILE = "/app/playlist.m3u"
+# Remote playlist URL
+REMOTE_PLAYLIST = "http://5.175.206.47/renderplaylist/playlist.m3u"
+
+# Local playback / HLS ayarları
 OUTPUT_M3U8 = "/app/public/stream.m3u8"
 SEGMENT_PATTERN = "/app/public/stream_%03d.ts"
-RETRY_COUNT = 3
-TIMEOUT = 5
 
-def get_links(file_path):
-    links = []
-    with open(file_path, "r") as f:
-        for line in f:
+# Oynatılan son film indeksi
+last_index = -1
+current_links = []
+
+def fetch_playlist():
+    """Uzak playlisti indirir ve linkleri döndürür."""
+    try:
+        resp = requests.get(REMOTE_PLAYLIST, timeout=10)
+        resp.raise_for_status()
+        links = []
+        for line in resp.text.splitlines():
             line = line.strip()
             if line and not line.startswith("#"):
                 links.append(line)
-    return links
+        return links
+    except Exception as e:
+        print(f"Playlist indirilemedi: {e}")
+        return []
 
-def is_alive(url, timeout=TIMEOUT):
-    """Link erişilebilir mi kontrol et"""
-    for _ in range(RETRY_COUNT):
-        try:
-            r = requests.head(url, timeout=timeout, allow_redirects=True)
-            if r.status_code == 200:
-                return True
-        except requests.RequestException:
-            time.sleep(0.5)
-    return False
-
-def play_links(links):
-    """Sadece erişilebilir linkleri HLS’e dönüştür"""
-    alive_links = [l for l in links if is_alive(l)]
-    if not alive_links:
-        print("Hiçbir link erişilebilir değil, bekleniyor...")
-        return
-
-    # FFmpeg input dosyası oluştur
-    with open("/tmp/temp_playlist.txt", "w") as f:
-        for l in alive_links:
-            f.write(f"{l}\n")
-
+def play_link(link):
+    """FFmpeg ile HLS stream oluşturur."""
+    print(f"Oynatılıyor: {link}")
     cmd = [
         "ffmpeg",
-        "-protocol_whitelist", "file,http,https,tcp,tls,crypto",
         "-re",
-        "-f", "concat",
-        "-safe", "0",
-        "-i", "/tmp/temp_playlist.txt",
+        "-i", link,
         "-c", "copy",
         "-f", "hls",
         "-hls_time", "6",
@@ -56,15 +44,44 @@ def play_links(links):
         "-hls_segment_filename", SEGMENT_PATTERN,
         OUTPUT_M3U8
     ]
+    subprocess.run(cmd, check=True)
 
-    try:
-        subprocess.run(cmd, check=True)
-    except subprocess.CalledProcessError as e:
-        print(f"FFmpeg hata verdi: {e}")
+def find_start_index(old_links, new_links, last_index):
+    """Oynatılan filmi bul, yoksa baştan başlat."""
+    if last_index >= len(old_links):
+        return 0
+    if last_index == -1:
+        return 0
+    last_link = old_links[last_index]
+    if last_link in new_links:
+        return new_links.index(last_link) + 1
+    else:
+        return 0
 
 if __name__ == "__main__":
+    current_links = fetch_playlist()
+    if not current_links:
+        print("Playlist boş! Çıkılıyor.")
+        exit(1)
+
     while True:
-        links = get_links(PLAYLIST_FILE)
-        play_links(links)
-        # Playlist’in başına dönüp sürekli döngü
-        time.sleep(1)
+        # Playlisti güncelle
+        new_links = fetch_playlist()
+        if new_links:
+            start_index = find_start_index(current_links, new_links, last_index)
+            current_links = new_links
+        else:
+            start_index = 0
+
+        # Oynatma döngüsü
+        for idx in range(start_index, len(current_links)):
+            link = current_links[idx]
+            try:
+                play_link(link)
+            except subprocess.CalledProcessError:
+                print(f"FFmpeg hata verdi, atlanıyor: {link}")
+                time.sleep(1)
+            last_index = idx
+
+        # Tüm liste bitti, tekrar başa dönmeden önce bekle
+        time.sleep(5)
