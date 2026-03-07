@@ -7,9 +7,8 @@ from urllib.parse import urljoin
 
 # Remote playlist URL
 SOURCE_M3U8 = "http://5.175.206.47/renderplaylist/playlist.m3u"
-
-OUTPUT_DIR = "/app/public/stream"
-PLAYLIST = os.path.join(OUTPUT_DIR, "live.m3u8")
+OUTPUT_DIR = "/app/public"
+PLAYLIST = os.path.join(OUTPUT_DIR, "stream.m3u8")
 
 SEGMENT_LIMIT = 20
 FFMPEG = "ffmpeg"  # PATH'ten kullan
