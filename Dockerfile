@@ -1,6 +1,7 @@
+# Dockerfile
 FROM ubuntu:22.04
 
-# VLC ve curl yükle
+# Temel paketler
 RUN apt update && apt install -y \
     vlc \
     curl \
@@ -8,8 +9,10 @@ RUN apt update && apt install -y \
 
 WORKDIR /app
 
-# Playlist ve start script
+# Start script ve playlist
 COPY start.sh /app/start.sh
+COPY playlist.m3u /app/playlist.m3u
+
 RUN chmod +x /app/start.sh
 
 EXPOSE 8080
