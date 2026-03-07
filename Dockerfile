@@ -1,18 +1,25 @@
+# Dockerfile
 FROM ubuntu:22.04
 
-RUN apt-get update && \
-    apt-get install -y ffmpeg nginx && \
-    rm -rf /var/lib/apt/lists/*
+# Temel paketler
+RUN apt update && apt install -y \
+    ffmpeg \
+    nginx \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-COPY xtt_movie.png /app/
-COPY start.sh /app/
+# Start script ve logo
+COPY start.sh /app/start.sh
+COPY xtt_movie.png /app/xtt_movie.png
 
 RUN chmod +x /app/start.sh
+RUN mkdir -p /app/public
 
-RUN mkdir /app/public
+# Nginx konfigürasyonu
+COPY default.conf /etc/nginx/sites-enabled/default
 
 EXPOSE 8080
 
-CMD ["/app/start.sh"]
+CMD ["bash", "/app/start.sh"]
