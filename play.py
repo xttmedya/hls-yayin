@@ -3,42 +3,29 @@ import subprocess
 import time
 import requests
 
-# Remote playlist URL
 REMOTE_PLAYLIST = "http://5.175.206.47/renderplaylist/playlist.m3u"
-
-# Local playback / HLS ayarları
 OUTPUT_M3U8 = "/app/public/stream.m3u8"
 SEGMENT_PATTERN = "/app/public/stream_%03d.ts"
 
-# Oynatılan son film indeksi
 last_index = -1
 current_links = []
 
 def fetch_playlist():
-    """Uzak playlisti indirir ve linkleri döndürür."""
     try:
         resp = requests.get(REMOTE_PLAYLIST, timeout=10)
         resp.raise_for_status()
-        links = []
-        for line in resp.text.splitlines():
-            line = line.strip()
-            if line and not line.startswith("#"):
-                links.append(line)
-        return links
+        return [line.strip() for line in resp.text.splitlines() if line.strip() and not line.startswith("#")]
     except Exception as e:
         print(f"Playlist indirilemedi: {e}")
         return []
 
 def play_link(link):
-    """FFmpeg ile HLS stream oluşturur, encode sadece gerekli."""
     print(f"Oynatılıyor: {link}")
     cmd = [
         "ffmpeg",
         "-re",
         "-i", link,
-        "-c:v libx264",      # encode video (logo veya overlay ekleme için)
-        "-c:a copy",          # sesi olduğu gibi kopyala
-        "-preset superfast",
+        "-c", "copy",
         "-f", "hls",
         "-hls_time", "6",
         "-hls_list_size", "24",
@@ -49,7 +36,6 @@ def play_link(link):
     subprocess.run(cmd, check=True)
 
 def find_start_index(old_links, new_links, last_index):
-    """Oynatılan filmi bul, yoksa baştan başlat."""
     if last_index >= len(old_links) or last_index == -1:
         return 0
     last_link = old_links[last_index]
@@ -77,5 +63,4 @@ if __name__ == "__main__":
                 time.sleep(1)
             last_index = idx
 
-        # Tüm liste bitti, tekrar başa dönmeden önce bekle
         time.sleep(5)

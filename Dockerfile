@@ -7,10 +7,8 @@ RUN apt update && apt install -y \
     python3 \
     python3-pip \
     curl \
+    && python3 -m pip install --no-cache-dir requests \
     && rm -rf /var/lib/apt/lists/*
-
-# requests modülünü yükle
-RUN python3 -m pip install --no-cache-dir requests
 
 WORKDIR /app
 
@@ -25,4 +23,4 @@ RUN chmod +x /app/start.sh
 
 EXPOSE 8080
 
-CMD ["bash", "/app/start.sh"]
+CMD ["/app/start.sh"]

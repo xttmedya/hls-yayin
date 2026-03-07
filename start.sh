@@ -2,11 +2,13 @@
 
 LOG_FILE="/app/play.log"
 
-# Nginx başlat
+# Nginx başlatılıyor
 service nginx start
 
-echo "Python playlist oynatıcı başlatılıyor..."
+# Python playlist oynatıcı arka planda
 nohup python3 /app/play.py > "$LOG_FILE" 2>&1 &
 
-echo "Stream hazır: http://<container-ip>:8080/stream.m3u8"
-echo "Log: $LOG_FILE"
+echo "Stream hazır: http://localhost:8080/stream.m3u8"
+
+# Foreground’da Nginx’i çalıştır
+exec nginx -g 'daemon off;'
