@@ -1,4 +1,3 @@
-# Dockerfile
 FROM ubuntu:22.04
 
 # Temel paketler
@@ -10,8 +9,10 @@ RUN apt update && apt install -y \
 
 WORKDIR /app
 
-# Start script
+# Start script ve playlist ekle
 COPY start.sh /app/start.sh
+COPY playlist.m3u /app/playlist.m3u
+
 RUN chmod +x /app/start.sh
 RUN mkdir -p /app/public
 
