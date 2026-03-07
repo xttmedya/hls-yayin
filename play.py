@@ -16,6 +16,15 @@ current_index = 0
 current_links = []
 
 def fetch_playlist():
+    try:
+        with open(REMOTE_PLAYLIST, "r") as f:
+            links = [line.strip() for line in f if line.strip() and not line.startswith("#")]
+        return links
+    except Exception as e:
+        print(f"Playlist okunamadı: {e}")
+        return []
+
+def fetch_playlist2():
     """Uzak playlisti indirir ve linkleri döndürür."""
     try:
         resp = requests.get(REMOTE_PLAYLIST, timeout=10)
