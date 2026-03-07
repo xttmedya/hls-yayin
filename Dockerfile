@@ -6,7 +6,6 @@ RUN apt update && apt install -y \
     python3 \
     python3-pip \
     curl \
-	&& python3 -m pip install --no-cache-dir requests \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
