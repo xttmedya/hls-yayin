@@ -7,7 +7,9 @@ mkdir -p /app/public
 TEMP_DIR="/app/temp"
 mkdir -p "$TEMP_DIR"
 
+# ------------------------------
 # Nginx başlat
+# ------------------------------
 service nginx start
 
 # ------------------------------
@@ -19,7 +21,7 @@ OUTPUT_M3U8="/app/public/stream.m3u8"
 # ------------------------------
 # Orijinal playlist indir
 # ------------------------------
-curl -s "$INPUT" -o "$TEMP_DIR/original.m3u8"
+curl -s -f -o "$TEMP_DIR/original.m3u8" "$INPUT"
 
 # ------------------------------
 # Playlist başlat
@@ -35,24 +37,26 @@ MAX_DURATION=$(grep "#EXTINF" "$TEMP_DIR/original.m3u8" \
 echo "#EXT-X-TARGETDURATION:$MAX_DURATION" >> "$OUTPUT_M3U8"
 
 # ------------------------------
-# Segmentleri sırayla indir ve kopyala
+# Segmentleri sırayla indir ve copy et
 # ------------------------------
+BASE_URL=$(dirname "$INPUT")
 SEGMENTS=($(grep -v "#" "$TEMP_DIR/original.m3u8"))
 SEGMENT_INDEX=0
 
 for SEGMENT_URL in "${SEGMENTS[@]}"; do
     SEGMENT_NAME=$(printf "stream_%03d.ts" "$SEGMENT_INDEX")
-    echo "Processing segment $SEGMENT_INDEX: $SEGMENT_URL"
+    FULL_URL="$BASE_URL/$SEGMENT_URL"
+    echo "Processing segment $SEGMENT_INDEX: $FULL_URL"
 
     # Segmenti indir
-    curl -s -f -o "$TEMP_DIR/$SEGMENT_NAME.orig" "$SEGMENT_URL"
+    curl -s -f -o "$TEMP_DIR/$SEGMENT_NAME.orig" "$FULL_URL"
 
     if [ ! -f "$TEMP_DIR/$SEGMENT_NAME.orig" ]; then
-        echo "!!! Segment indirilemedi: $SEGMENT_URL"
+        echo "!!! Segment indirilemedi: $FULL_URL"
         continue
     fi
 
-    # FFmpeg ile sadece copy
+    # Copy ile yayın (encode yok)
     ffmpeg -y -i "$TEMP_DIR/$SEGMENT_NAME.orig" -c copy "/app/public/$SEGMENT_NAME"
 
     # Süreyi al (orijinal segment süresini korumak için)
@@ -70,7 +74,7 @@ done
 echo "#EXT-X-ENDLIST" >> "$OUTPUT_M3U8"
 
 # ------------------------------
-# Temp temizle
+# Temizleme
 # ------------------------------
 rm -rf "$TEMP_DIR"
 
