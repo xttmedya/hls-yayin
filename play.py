@@ -30,13 +30,15 @@ def fetch_playlist():
         return []
 
 def play_link(link):
-    """FFmpeg ile HLS stream oluşturur."""
+    """FFmpeg ile HLS stream oluşturur, encode sadece gerekli."""
     print(f"Oynatılıyor: {link}")
     cmd = [
         "ffmpeg",
         "-re",
         "-i", link,
-        "-c", "copy",
+        "-c:v libx264",      # encode video (logo veya overlay ekleme için)
+        "-c:a copy",          # sesi olduğu gibi kopyala
+        "-preset superfast",
         "-f", "hls",
         "-hls_time", "6",
         "-hls_list_size", "24",
