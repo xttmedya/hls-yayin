@@ -2,7 +2,6 @@
 import subprocess
 import time
 import requests
-import os
 
 # Remote playlist URL
 REMOTE_PLAYLIST = "http://5.175.206.47/renderplaylist/playlist.m3u"
@@ -11,8 +10,8 @@ REMOTE_PLAYLIST = "http://5.175.206.47/renderplaylist/playlist.m3u"
 OUTPUT_M3U8 = "/app/public/stream.m3u8"
 SEGMENT_PATTERN = "/app/public/stream_%03d.ts"
 
-# Oynatılan son film adı (başlangıçta yok)
-current_index = 0
+# Oynatılan son film indeksi
+last_index = -1
 current_links = []
 
 def fetch_playlist():
@@ -48,11 +47,10 @@ def play_link(link):
     subprocess.run(cmd, check=True)
 
 def find_start_index(old_links, new_links, last_index):
-    """
-    Önceki listede oynatılan filmi bul, yeni listede varsa onun indexinden devam et.
-    Yoksa baştan başlat.
-    """
+    """Oynatılan filmi bul, yoksa baştan başlat."""
     if last_index >= len(old_links):
+        return 0
+    if last_index == -1:
         return 0
     last_link = old_links[last_index]
     if last_link in new_links:
@@ -61,25 +59,21 @@ def find_start_index(old_links, new_links, last_index):
         return 0
 
 if __name__ == "__main__":
-    # Başlangıçta playlist al
     current_links = fetch_playlist()
     if not current_links:
-        print("Playlist boş!")
+        print("Playlist boş! Çıkılıyor.")
         exit(1)
-
-    last_index = -1  # Henüz oynatılan yok
 
     while True:
         # Playlisti güncelle
         new_links = fetch_playlist()
         if new_links:
-            # Son oynatılan filmi kontrol et, devam et
             start_index = find_start_index(current_links, new_links, last_index)
             current_links = new_links
         else:
-            start_index = 0  # Hata durumunda baştan başla
+            start_index = 0
 
-        # Oynatmaya başla
+        # Oynatma döngüsü
         for idx in range(start_index, len(current_links)):
             link = current_links[idx]
             try:
@@ -89,5 +83,5 @@ if __name__ == "__main__":
                 time.sleep(1)
             last_index = idx
 
-        # Tüm liste bitti, tekrar başa dönmeden önce 5 sn bekle
+        # Tüm liste bitti, tekrar başa dönmeden önce bekle
         time.sleep(5)
