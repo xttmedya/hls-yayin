@@ -10,7 +10,7 @@ RUN apt update && apt install -y \
 
 WORKDIR /app
 
-# Start script ve logo
+# Start script
 COPY start.sh /app/start.sh
 
 RUN chmod +x /app/start.sh
