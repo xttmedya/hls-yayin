@@ -1,6 +1,5 @@
 FROM ubuntu:22.04
 
-# Temel paketler
 RUN apt update && apt install -y \
     ffmpeg \
     python3 \
@@ -8,17 +7,17 @@ RUN apt update && apt install -y \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
+# requests modülünü yükle
+RUN python3 -m pip install --no-cache-dir requests
+
 WORKDIR /app
 
-# Scriptler
 COPY start.sh /app/start.sh
 COPY play.py /app/play.py
 
-# HLS dosyaları için klasör
 RUN mkdir -p /app/public
 RUN chmod +x /app/start.sh
 
 EXPOSE 8080
 
-# Python player foreground'da çalışacak
 CMD ["bash", "/app/start.sh"]
