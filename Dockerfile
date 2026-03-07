@@ -1,24 +1,24 @@
-# Dockerfile
 FROM ubuntu:22.04
 
 # Temel paketler
 RUN apt update && apt install -y \
     ffmpeg \
     nginx \
+    python3 \
+    python3-pip \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-# Start script ve logo
+# Scriptler ve nginx config
 COPY start.sh /app/start.sh
-COPY xtt_movie.png /app/xtt_movie.png
-
-RUN chmod +x /app/start.sh
-RUN mkdir -p /app/public
-
-# Nginx konfigürasyonu
 COPY default.conf /etc/nginx/sites-enabled/default
+COPY play.py /app/play.py
+
+# HLS dosyaları için klasör
+RUN mkdir -p /app/public
+RUN chmod +x /app/start.sh
 
 EXPOSE 8080
 
