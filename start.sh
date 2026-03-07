@@ -1,34 +1,21 @@
 #!/bin/bash
 
-# ------------------------------
-# Dizinleri hazırla
-# ------------------------------
 mkdir -p /app/public
 
-# ------------------------------
-# Nginx başlat
-# ------------------------------
 service nginx start
 
-# ------------------------------
-# Yayın kaynağı
-# ------------------------------
 INPUT="https://test-streams.mux.dev/x36xhzz/url_0/193039199_mp4_h264_aac_hd_7.m3u8"
 LOGO="/app/xtt_movie.png"
 
-# ------------------------------
-# FFmpeg ile HLS oluşturma (CPU dostu ayarlar)
-# ------------------------------
 ffmpeg -re -i "$INPUT" -i "$LOGO" \
 -filter_complex "overlay=10:10,format=yuv420p" \
 -c:v libx264 \
 -preset superfast \
 -tune zerolatency \
 -profile:v main \
--level 3.1 \
+-level 4.0 \
 -r 25 \
 -g 50 \
--x264-params "keyint=50:min-keyint=50:no-scenecut" \
 -b:v 1000k \
 -maxrate 1200k \
 -bufsize 1500k \
