@@ -8,7 +8,7 @@ INPUT="https://test-streams.mux.dev/x36xhzz/url_0/193039199_mp4_h264_aac_hd_7.m3
 LOGO="/app/xtt_movie.png"
 
 ffmpeg -re -i "$INPUT" -i "$LOGO" \
--filter_complex "overlay=10:10,format=yuv420p" \
+-filter_complex "overlay=20:20,format=yuv420p" \
 -c:v libx264 \
 -preset superfast \
 -tune zerolatency \
