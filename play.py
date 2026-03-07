@@ -60,9 +60,10 @@ def find_start_index(old_links, new_links, last_index):
 
 if __name__ == "__main__":
     current_links = fetch_playlist()
-    if not current_links:
-        print("Playlist boş! Çıkılıyor.")
-        exit(1)
+    while not current_links:
+        print("Playlist boş, 5 saniye bekleniyor...")
+        time.sleep(5)
+        current_links = fetch_playlist()
 
     while True:
         # Playlisti güncelle
