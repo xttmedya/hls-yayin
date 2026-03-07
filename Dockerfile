@@ -1,23 +1,16 @@
-# Dockerfile
 FROM ubuntu:22.04
 
-# Temel paketler
+# VLC ve curl yükle
 RUN apt update && apt install -y \
-    ffmpeg \
-    nginx \
+    vlc \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-# Start script
+# Playlist ve start script
 COPY start.sh /app/start.sh
-
 RUN chmod +x /app/start.sh
-RUN mkdir -p /app/public
-
-# Nginx konfigürasyonu
-COPY default.conf /etc/nginx/sites-enabled/default
 
 EXPOSE 8080
 
