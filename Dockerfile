@@ -10,10 +10,8 @@ RUN apt update && apt install -y \
 
 WORKDIR /app
 
-# Start script ve logo
+# Start script
 COPY start.sh /app/start.sh
-COPY xtt_movie.png /app/xtt_movie.png
-
 RUN chmod +x /app/start.sh
 RUN mkdir -p /app/public
 
