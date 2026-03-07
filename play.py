@@ -48,9 +48,7 @@ def play_link(link):
 
 def find_start_index(old_links, new_links, last_index):
     """Oynatılan filmi bul, yoksa baştan başlat."""
-    if last_index >= len(old_links):
-        return 0
-    if last_index == -1:
+    if last_index >= len(old_links) or last_index == -1:
         return 0
     last_link = old_links[last_index]
     if last_link in new_links:
@@ -59,21 +57,15 @@ def find_start_index(old_links, new_links, last_index):
         return 0
 
 if __name__ == "__main__":
-    current_links = fetch_playlist()
-    if not current_links:
-        print("Playlist boş! Çıkılıyor.")
-        exit(1)
-
     while True:
-        # Playlisti güncelle
-        new_links = fetch_playlist()
-        if new_links:
-            start_index = find_start_index(current_links, new_links, last_index)
-            current_links = new_links
-        else:
-            start_index = 0
+        current_links = fetch_playlist()
+        if not current_links:
+            print("Playlist boş! 10 saniye bekleniyor...")
+            time.sleep(10)
+            continue
 
-        # Oynatma döngüsü
+        start_index = find_start_index(current_links, current_links, last_index)
+
         for idx in range(start_index, len(current_links)):
             link = current_links[idx]
             try:
