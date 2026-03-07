@@ -9,10 +9,8 @@ RUN apt update && apt install -y \
 
 WORKDIR /app
 
-# Start script ve playlist
+# Start script
 COPY start.sh /app/start.sh
-COPY playlist.m3u /app/playlist.m3u
-
 RUN chmod +x /app/start.sh
 
 EXPOSE 8080
