@@ -1,22 +1,19 @@
 #!/bin/bash
 
-# Log dosyası
-LOG_FILE="/app/vlc.log"
+mkdir -p /app/public
 
-# Kaynak HLS playlist
-INPUT_PLAYLIST="https://test-streams.mux.dev/x36xhzz/url_8/193039199_mp4_h264_aac_fhd_7.m3u8"
+# Nginx başlat
+service nginx start
 
-# VLC arka planda başlatılıyor
-echo "VLC arka planda başlatılıyor..."
-nohup cvlc "$INPUT_PLAYLIST" \
-    --no-video-title-show \
-    --loop \
-    --quiet \
-    --sout "#standard{access=http,mux=ts,dst=:8080}" \
-    > "$LOG_FILE" 2>&1 &
+# HLS kaynağı
+INPUT="https://test-streams.mux.dev/x36xhzz/url_0/193039199_mp4_h264_aac_hd_7.m3u8"
 
-echo "Stream hazır: http://<container-ip>:8080"
-echo "Log: $LOG_FILE"
-
-# Container ömrünü VLC’ye bağla
-wait
+# Direkt copy, encode yok, sadece HLS segmentlerini repack ediyor
+ffmpeg -re -i "$INPUT" \
+-c copy \
+-f hls \
+-hls_time 6 \
+-hls_list_size 24 \
+-hls_flags delete_segments+append_list \
+-hls_segment_filename "/app/public/stream_%03d.ts" \
+/app/public/stream.m3u8
